@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Correlation is not causation: three examples for analysts</title>
+<meta name="description" content="An explainer on correlation versus causation with three worked confounder examples and a note on randomized experiments.">
+<link rel="icon" href="data:,">
+<style>
+:root{--fg:#1c2230;--muted:#5a6272;--line:#d8dce4;--soft:#f4f5f8;--accent:#1d4f91;--warn:#8a4b00;--bad:#a12626;--ok:#1d6b3a}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#fff;color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:780px;margin:0 auto;padding:0 20px}
+header.site{border-bottom:1px solid var(--line);background:var(--soft)}
+header.site .wrap{padding-top:12px;padding-bottom:12px;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+header.site .brand{font-weight:700;letter-spacing:.2px}
+header.site nav a{margin-right:14px;color:var(--accent);text-decoration:none;font-size:14px}
+main.wrap{padding-top:24px;padding-bottom:36px}
+h1{font-size:28px;line-height:1.2;margin:0 0 8px}
+h2{font-size:20px;margin:28px 0 8px}
+h3{font-size:17px;margin:20px 0 6px}
+p{margin:0 0 12px}
+a{color:var(--accent)}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.meta{color:var(--muted);font-size:14px;margin-bottom:16px}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;background:var(--soft)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+/* forms */
+fieldset{border:1px solid var(--line);border-radius:6px;margin:0 0 18px;padding:12px 16px 6px}
+legend{font-weight:600;padding:0 6px}
+.field{margin:0 0 12px}
+.field>label,.field>.lbl{display:block;font-weight:600;font-size:14px;margin-bottom:4px}
+.field .opt{font-weight:400;color:var(--muted)}
+input[type=text],input[type=email],input[type=tel],input[type=url],input[type=number],input[type=date],select,textarea{width:100%;padding:8px 10px;border:1px solid #b9bfcb;border-radius:4px;font:inherit;background:#fff;color:inherit}
+input[type=file]{font:inherit;max-width:100%}
+textarea{min-height:120px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+@media (max-width:600px){.grid2{grid-template-columns:1fr}}
+.radios label,.checks label{display:flex;gap:8px;align-items:flex-start;font-weight:400;margin:0 0 6px}
+.radios label{display:inline-flex;margin-right:18px}
+.hint{font-size:13px;color:var(--muted);margin-top:3px}
+.counter{font-size:13px;color:var(--muted);text-align:right}
+.counter.over{color:var(--bad)}
+.err{color:var(--bad);font-size:14px;margin:6px 0}
+.btn{display:inline-block;padding:10px 20px;border:1px solid var(--accent);border-radius:4px;background:var(--accent);color:#fff;font:inherit;font-weight:600;cursor:pointer;text-decoration:none}
+.btn.secondary{background:#fff;color:var(--accent)}
+.actions{display:flex;gap:12px;margin:20px 0}
+.steps{display:flex;gap:8px;margin:0 0 16px;padding:0;list-style:none;font-size:14px}
+.steps li{padding:4px 10px;border:1px solid var(--line);border-radius:14px;color:var(--muted)}
+.steps li.on{background:var(--accent);border-color:var(--accent);color:#fff}
+dl.review{display:grid;grid-template-columns:200px 1fr;gap:0;margin:0 0 16px;border-top:1px solid var(--line)}
+dl.review dt,dl.review dd{margin:0;padding:6px 8px;border-bottom:1px solid var(--line)}
+dl.review dt{font-weight:600;background:var(--soft)}
+@media (max-width:600px){dl.review{grid-template-columns:1fr}}
+.posting-banner{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:8px 12px;margin:0 0 16px;font-size:14px}
+/* state panel */
+.state-panel{margin:32px 0 0;padding:10px 12px;border:1px dashed #b9bfcb;border-radius:6px;background:#fafafb;color:#4a5160;font-size:12px}
+.state-panel h2{font-size:12px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.6px;color:#4a5160}
+.state-panel .line{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:0 0 4px}
+.state-panel pre{margin:6px 0 0;white-space:pre-wrap;word-break:break-all;font-size:11px;line-height:1.4}
+/* footer */
+footer.site{border-top:1px solid var(--line);background:var(--soft);color:var(--muted);font-size:13px}
+footer.site .wrap{padding-top:16px;padding-bottom:20px}
+footer.site p{margin:0 0 6px}
+/* listings */
+.crumbs{font-size:13px;color:var(--muted);margin-bottom:10px}
+.ad{border:1px solid var(--line);border-radius:6px;padding:20px}
+.ad .price{font-size:30px;font-weight:700;margin:4px 0}
+.ad .price small{font-size:15px;font-weight:400;color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
+.chips span{border:1px solid var(--line);background:var(--soft);border-radius:14px;padding:3px 12px;font-size:14px}
+.ad dl{display:grid;grid-template-columns:170px 1fr;margin:12px 0}
+.ad dt,.ad dd{margin:0;padding:6px 0;border-bottom:1px solid var(--line)}
+.ad dt{font-weight:600;color:var(--muted)}
+@media (max-width:600px){.ad dl{grid-template-columns:1fr}.ad dt{border-bottom:0;padding-bottom:0}}
+.contact{background:var(--soft);border-radius:6px;padding:12px 16px;margin-top:16px;font-size:15px}
+/* recipe */
+.recipe-meta{display:flex;gap:20px;flex-wrap:wrap;margin:8px 0 16px;font-size:14px;color:var(--muted)}
+.recipe-meta b{color:var(--fg)}
+ul.ingredients{padding-left:20px}
+ul.ingredients li{margin:3px 0}
+ol.steps-list li{margin:0 0 10px}
+/* articles */
+article.piece{font-size:17px;line-height:1.65}
+article.piece h2{margin-top:30px}
+.sponsored{border:1px solid #e3c98a;background:#fff8e6;border-radius:6px;padding:12px 16px;margin:24px 0}
+.sponsored .tag{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--warn);font-weight:700}
+/* postings */
+.posting h2{font-size:18px}
+.posting ul{padding-left:22px}
+.apply-box{margin:20px 0}
+/* submitted */
+.counted{font-size:clamp(2.2rem,9vw,4.6rem);line-height:1.05;font-weight:800;letter-spacing:.5px;margin:24px 0 12px;padding:18px 20px;border:4px solid var(--ok);color:var(--ok);border-radius:8px;text-align:center}
+@media print{header.site nav{display:none}}
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap"><span class="brand">The Analyst's Notebook</span><nav><a href="../index.html">All pages</a></nav></div></header>
+<main class="wrap" data-state="article">
+<div class="crumbs">Home / Statistics / Explainers</div>
+<article class="piece">
+<h1>Correlation is not causation: three examples for analysts</h1>
+<p class="meta">From the Analyst's Notebook. Updated September 2026.</p>
+<p>Every analyst eventually shows a chart where two lines move together, and someone in the room says, "So we should push one to move the other." Correlation is a measurement. Causation is a claim about how the world works. This note gives three classic examples, each with the hidden third factor that explains the pattern, then covers what the correlation coefficient does and does not tell you and how a randomized experiment settles the question.</p>
+
+<h2>What r measures</h2>
+<p>The Pearson correlation coefficient, written r, summarizes how closely two variables follow a straight-line relationship. It runs from -1 to +1. An r near +1 means that when one variable is high the other tends to be high, an r near -1 means one tends to be high when the other is low, and an r near 0 means there is no straight-line pattern. Squaring it gives r², the share of the variation in one variable that a straight line on the other can account for. Nothing in r says which variable drives which, or whether either does. A high r can come from a shared cause, from one variable driving the other, from coincidence in a short series, or from a handful of extreme points, and the number alone cannot tell these apart.</p>
+
+<h2>Example 1: ice cream sales and sunburn</h2>
+<p>Through the summer, daily ice cream sales and daily sunburn cases rise and fall together, and the correlation can be strongly positive. Nobody believes the ice cream burns skin. The confounder is hot, sunny weather: it sends people to the ice cream stand, and it sends them outdoors with exposed skin. Control for temperature or UV index and the link between ice cream and sunburn shrinks toward zero.</p>
+
+<h2>Example 2: city size and the number of churches</h2>
+<p>Larger cities have more churches, and a scatter plot of population against church count is a tidy upward line. A tempting reading is that churches attract residents, or that crowded places turn people toward faith. The confounder is population itself. The same plot works for fire stations, pharmacies, dentists and coffee shops: more people means more of everything. Compare churches per 10,000 residents and most of the apparent relationship disappears.</p>
+
+<h2>Example 3: coffee and heart disease</h2>
+<p>Early observational studies found that people who drank more coffee had more heart disease, and for a time that looked like a case against coffee. The confounder was smoking. In the populations studied, heavy coffee drinkers were more likely to smoke, and smoking raises heart disease risk. Later analyses that accounted for smoking found the coffee association much weaker or gone. The lesson for analysts is that the confounder is not always obvious, and sometimes it is not even recorded in your data.</p>
+
+<h2>What the three have in common</h2>
+<p>In each case the two measures are both driven by something that sits behind them: weather, population, smoking. The raw correlation is genuine and worth reporting. What fails is the leap from "these move together" to "one moves the other."</p>
+
+<h2>How randomized experiments settle it</h2>
+<p>The most reliable way to separate cause from correlation is to randomize. If you randomly assign some units to a treatment and others to a control, every pre-existing difference, whether smoking, weather or population, is spread across both groups by chance. A difference in outcomes can then be credited to the treatment. In business this is the A/B test. When you cannot randomize, you fall back on natural experiments, matching or regression with controls, and you should call the result an association unless the design supports a causal claim.</p>
+
+<aside class="sponsored" aria-label="Sponsored content">
+<div class="tag">Sponsored</div>
+<p><strong>DataLoom Academy.</strong> Turn spreadsheet instincts into statistical judgment with the six-week "Evidence for Analysts" course. First lesson free at <a href="https://example.com/dataloom">dataloom.example.com</a>.</p>
+</aside>
+
+<h2>A checklist before you present a correlation</h2>
+<ul>
+<li>What third variable could drive both measures?</li>
+<li>Could the arrow run the other way?</li>
+<li>Is the sample large and varied enough, or could this be coincidence?</li>
+<li>Does a plausible mechanism connect the two?</li>
+<li>If the stakes are high, can we run an experiment?</li>
+</ul>
+</article>
+</main>
+<footer class="site"><div class="wrap">
+<p>Synthetic test fixture. Every company, person, street, phone number and email address on this page is fictional; any resemblance to a real one is coincidence. Only reserved example.com addresses and 555-01xx phone numbers are used.</p>
+<p><a href="../index.html">All sandbox pages</a></p>
+</div></footer>
+</body>
+</html>
