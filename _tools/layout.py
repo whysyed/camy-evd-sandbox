@@ -5,6 +5,7 @@ from assets import CSS
 REG = {
     'index':            ('index.html', []),
     'job_app':          ('forms/job-application.html', []),
+    'job_app_b':        ('forms/job-application-b.html', []),
     'ridgeway_dispute': ('forms/ridgeway-dispute.html', ['ridgeway/dispute.html']),
     'submitted':        ('forms/submitted.html', []),
     'ridgeway_policy':  ('policy/ridgeway-policy.html', ['ridgeway/policy.html']),

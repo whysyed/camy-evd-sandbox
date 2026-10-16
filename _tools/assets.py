@@ -263,6 +263,7 @@ SUBMITTED_JS = r'''
 'use strict';
 var REQUIRED = {
   'job-application': {fields: ['first_name','last_name','email'], files: ['resume'], checks: ['terms','privacy','certify']},
+  'job-application-b': {fields: ['first_name','last_name','email'], files: ['resume'], checks: ['terms','privacy','certify']},
   'ridgeway-dispute': {fields: ['customer_name','email','invoice_number'], files: [], checks: ['declaration']}
 };
 var q = new URLSearchParams(location.search);

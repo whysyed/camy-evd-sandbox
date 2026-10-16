@@ -11,6 +11,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 BUILDERS = {
     'job_app': F.build_job_app,
+    'job_app_b': lambda p: F.build_job_app(p, button_label='Submit', page_id='job-application-b'),
     'ridgeway_dispute': F.build_ridgeway_dispute,
     'submitted': F.build_submitted,
     'ridgeway_policy': C.build_ridgeway_policy,
@@ -27,8 +28,9 @@ BUILDERS = {
 INDEX_ROWS = [
     ('Forms', [
         ('job_app', 'Candidate application form', 'Job application with uploads, a 500-character answer and voluntary self-identification questions.'),
+        ('job_app_b', 'Candidate application form (variant B)', 'The same application form; its last button reads only Submit.'),
         ('ridgeway_dispute', 'Billing dispute form (Ridgeway Tire & Brake #114)', 'Three-step dispute form with a review screen and a receipt upload.'),
-        ('submitted', 'Counting page', 'Where both forms end when Submit is pressed.'),
+        ('submitted', 'Counting page', 'Where every form ends when its last button is pressed.'),
     ]),
     ('Merchant pages', [
         ('ridgeway_policy', 'Billing policy (Ridgeway Tire & Brake #114)', 'Duplicate-charge and billing-correction terms.'),
@@ -54,7 +56,7 @@ INDEX_ROWS = [
 
 def build_index(path):
     out = ['<main class="wrap" data-state="index"><h1>Sandbox pages</h1>',
-           '<p class="meta">Static, self-contained test pages. No scripts load from elsewhere, nothing is collected, and the two forms never send what you type anywhere.</p>']
+           '<p class="meta">Static, self-contained test pages. No scripts load from elsewhere, nothing is collected, and the forms never send what you type anywhere.</p>']
     for section, rows in INDEX_ROWS:
         out.append('<h2>%s</h2><table><thead><tr><th>Page</th><th>What it is</th></tr></thead><tbody>' % section)
         for key, name, what in rows:

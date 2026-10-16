@@ -36,7 +36,7 @@ def checkbox(name, label_html):
         name, name, label_html)
 
 
-def build_job_app(path):
+def build_job_app(path, button_label='Submit application', page_id='job-application'):
     sub = href('submitted', path)
     eeo_gender = ['Woman', 'Man', 'Non-binary', 'Prefer to self-describe', 'Decline to answer']
     eeo_race = ['American Indian or Alaska Native', 'Asian', 'Black or African American', 'Hispanic or Latino',
@@ -85,7 +85,7 @@ def build_job_app(path):
         + checkbox('privacy', 'I have read the Privacy Notice.') \
         + checkbox('certify', 'I certify that the information I have provided is true and complete.') + '''
 </fieldset>
-<div class="actions"><button type="submit" class="btn" id="submit-btn">Submit application</button></div>
+<div class="actions"><button type="submit" class="btn" id="submit-btn">''' + esc(button_label) + '''</button></div>
 </form>
 ''' + state_panel() + '''
 </main>'''
@@ -103,7 +103,7 @@ function note(n, f){
   el.textContent = msgs.join(' '); el.hidden = msgs.length === 0;
 }
 window.BENCH_CFG = {
-  page: 'job-application',
+  page: ''' + "'" + page_id + "'" + ''',
   submitHref: ''' + "'" + sub + "'" + ''',
   extra: function(){ return {posting: known || null}; },
   onFile: note

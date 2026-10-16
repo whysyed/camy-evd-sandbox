@@ -10,6 +10,7 @@ Published under `https://whysyed.github.io/camy-evd-sandbox/` (GitHub Pages, bra
 | --- | --- |
 | `index.html` | Index of all pages |
 | `forms/job-application.html` | Candidate application form (resume and cover letter uploads, 500-character answer, EEO selects, three checkboxes, Submit). Optional `?posting=fernhollow-csm` or `?posting=tallgrass-opm` shows an "Applying for" banner |
+| `forms/job-application-b.html` | The same candidate application form with page id `job-application-b`; its last button reads only "Submit" (probe for a bare submit control; counts separately on the counting page) |
 | `forms/ridgeway-dispute.html` | Ridgeway Tire & Brake #114 billing dispute form: step 1 details, step 2 charges and receipt upload, step 3 review plus declaration and Submit |
 | `forms/submitted.html` | The counting page (see below) |
 | `policy/ridgeway-policy.html` | Ridgeway billing policy (billing email, 60 days, 3 business days, 5-7 business days) |
